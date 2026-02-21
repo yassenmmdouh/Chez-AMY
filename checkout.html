@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Checkout</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+<div class="checkout-container">
+<h2>Complete Order</h2>
+
+<form id="order-form">
+
+<input type="text" autocomplete="off" name="text" class="input" id="name" placeholder="Name">
+<input type="text" autocomplete="off" name="text" class="input" id="phone" placeholder="Phone">
+<input type="text" autocomplete="off" name="text" class="input" id="address" placeholder="Address">
+
+<button class="btn-17">
+  <span class="text-container">
+    <span class="text">send order</span>
+  </span>
+</button>
+
+</form>
+</div>
+<script src="js/store.js"></script>
+<script>
+
+document.getElementById("order-form").addEventListener("submit", function(e){
+
+  e.preventDefault();
+
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  if(cart.length === 0){
+    alert("Cart is empty");
+    return;
+  }
+
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const address = document.getElementById("address").value.trim();
+
+  if(!name || !phone || !address){
+    alert("Please fill all fields");
+    return;
+  }
+
+  /* ===== رسالة الطلب ===== */
+
+  let message = "🛒 CHEZ AMY ORDER\n\n";
+
+  let total = 0;
+
+  cart.forEach(item=>{
+    message += `${item.name} x${item.qty} - ${item.price} EGP\n`;
+    total += item.price * item.qty;
+  });
+
+  message += `\n💰 Total: ${total} EGP\n`;
+  message += `\n👤 Name: ${name}`;
+  message += `\n📞 Phone: ${phone}`;
+  message += `\n📍 Address: ${address}`;
+
+  const encodedMessage = encodeURIComponent(message);
+
+  const whatsappNumber = "201111129289";
+
+  window.open(
+    `https://wa.me/${whatsappNumber}?text=${encodedMessage}`,
+    "_blank"
+  );
+
+  /* مسح الكارت بعد الطلب */
+  localStorage.removeItem("cart");
+
+});
+
+</script></body>
+</html>
